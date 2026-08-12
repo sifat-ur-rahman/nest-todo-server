@@ -50,20 +50,7 @@ Edit `.env` — at minimum set `JWT_SECRET` to a long random string and
 
 ### Run MongoDB locally and inspect it with mongosh
 
-```bash
-# start mongod (if not already running as a service)
-mongod --dbpath /path/to/data
-
-# in another terminal, connect with the shell to verify / inspect data
-mongosh "mongodb://127.0.0.1:27017/todo_db"
-
-# inside mongosh, once the app has created some data:
-show collections
-db.users.find().pretty()
-db.todos.find({ user: ObjectId("...") }).pretty()
-```
-
-### Run the API
+### Run the Server
 
 ```bash
 npm run start:dev   # watch mode
@@ -79,26 +66,26 @@ All responses are wrapped as `{ success, statusCode, data }` on success or
 
 ### Auth
 
-| Method | Route | Body | Notes |
-|---|---|---|---|
-| POST | `/auth/register` | `{ name, email, password }` | creates user, returns `{ accessToken, user }` |
-| POST | `/auth/login` | `{ email, password }` | returns `{ accessToken, user }` |
+| Method | Route            | Body                        | Notes                                         |
+| ------ | ---------------- | --------------------------- | --------------------------------------------- |
+| POST   | `/auth/register` | `{ name, email, password }` | creates user, returns `{ accessToken, user }` |
+| POST   | `/auth/login`    | `{ email, password }`       | returns `{ accessToken, user }`               |
 
 ### Users (requires `Authorization: Bearer <token>`)
 
-| Method | Route | Notes |
-|---|---|---|
-| GET | `/users/me` | current user's profile |
+| Method | Route       | Notes                  |
+| ------ | ----------- | ---------------------- |
+| GET    | `/users/me` | current user's profile |
 
 ### Todos (requires `Authorization: Bearer <token>`, always scoped to the caller)
 
-| Method | Route | Body | Notes |
-|---|---|---|---|
-| POST | `/todos` | `{ title, description?, completed? }` | create |
-| GET | `/todos` | — | list current user's todos |
-| GET | `/todos/:id` | — | single todo (404/403 if not owned) |
-| PATCH | `/todos/:id` | any subset of create fields | update |
-| DELETE | `/todos/:id` | — | delete |
+| Method | Route        | Body                                  | Notes                              |
+| ------ | ------------ | ------------------------------------- | ---------------------------------- |
+| POST   | `/todos`     | `{ title, description?, completed? }` | create                             |
+| GET    | `/todos`     | —                                     | list current user's todos          |
+| GET    | `/todos/:id` | —                                     | single todo (404/403 if not owned) |
+| PATCH  | `/todos/:id` | any subset of create fields           | update                             |
+| DELETE | `/todos/:id` | —                                     | delete                             |
 
 ## Production notes already baked in
 
